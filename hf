@@ -1,0 +1,1 @@
+/home/talles/Scripts/venvs/huggingface/bin/huggingface-cli "$@"
