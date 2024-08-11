@@ -1,0 +1,1 @@
+top -cp $(pgrep -d',' -f $(echo "$*" | tr " " "|"))

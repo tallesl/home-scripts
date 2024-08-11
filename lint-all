@@ -1,0 +1,2 @@
+venv/bin/pylint `py-files`
+venv/bin/mypy `py-files`

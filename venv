@@ -1,0 +1,13 @@
+if test -d venv
+then
+    rm -rf venv
+fi
+
+python3 -m venv venv
+
+venv/bin/pip install pylint mypy grip
+
+if test -f requirements.txt
+then
+    venv/bin/pip install -r requirements.txt
+fi
