@@ -1,13 +1,21 @@
-if test -d venv
-then
-    rm -rf venv
+#!/bin/bash
+
+if [ -d venv ]; then
+    read -p "rm -rf venv? (y/n): " choice
+    case "$choice" in 
+      y|Y ) rm -rf $VENV_DIR;;
+      * ) return;;
+    esac
 fi
 
+echo "python3 -m venv venv"
 python3 -m venv venv
 
-venv/bin/pip install pylint mypy grip
+. venv/bin/activate
 
-if test -f requirements.txt
-then
-    venv/bin/pip install -r requirements.txt
+if [ -f "requirements.txt" ]; then
+    read -p "pip install -r requirements.txt? (y/n): " choice
+    case "$choice" in 
+      y|Y ) pip install -r requirements.txt;;
+    esac
 fi
