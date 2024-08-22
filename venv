@@ -1,21 +1,39 @@
 #!/bin/bash
 
-if [ -d venv ]; then
-    read -p "rm -rf venv? (y/n): " choice
+remove_venv='rm -rf venv'
+create_venv='python3 -m venv venv'
+activate_venv='. venv/bin/activate'
+install_requirements='pip install -r requirements.txt'
+install_requirements_dev='pip install -r requirements-dev.txt'
+
+function prompt_and_execute() {
+    local command=$1
+    read -p "$command? (y/n): " choice
     case "$choice" in 
-      y|Y ) rm -rf $VENV_DIR;;
-      * ) return;;
+        y|Y )
+            eval $command
+            return 0;;
+        * )
+            return 1;;
     esac
+}
+
+if [ -d venv ]; then
+    if ! prompt_and_execute "$remove_venv"; then
+        return
+    fi
 fi
 
-echo "python3 -m venv venv"
-python3 -m venv venv
+echo $create_venv
+eval $create_venv
 
-. venv/bin/activate
+echo $activate_venv
+eval $activate_venv
 
 if [ -f "requirements.txt" ]; then
-    read -p "pip install -r requirements.txt? (y/n): " choice
-    case "$choice" in 
-      y|Y ) pip install -r requirements.txt;;
-    esac
+    prompt_and_execute "$install_requirements"
+fi
+
+if [ -f "requirements-dev.txt" ]; then
+    prompt_and_execute "$install_requirements_dev"
 fi
