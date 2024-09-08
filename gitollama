@@ -1,0 +1,3 @@
+echo Commiting...
+git commit -m "`git diff --cached | ollama run tavernari/git-commit-message`"
+git log -1
