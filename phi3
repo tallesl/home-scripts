@@ -1,0 +1,1 @@
+wget http://localhost:11434/api/generate --quiet -O- --post-data="{\"model\": \"phi3\", \"prompt\": \"$*\", \"stream\": false}" | jq --raw-output ".response"
