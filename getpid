@@ -1,0 +1,1 @@
+sh -c 'echo $$; echo "Press Enter to continue..."; read dummy; exec "$@"' sh "$@"

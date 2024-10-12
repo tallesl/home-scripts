@@ -1,1 +1,37 @@
-ffmpeg -i "$1" -vn -ar 44100 -ac 2 -b:a 128k "${1%.*}".mp3
+#!/bin/bash
+
+# Default values
+X_MINUTES=0
+INPUT_FILE=""
+
+# Parsing arguments
+for arg in "$@"; do
+  if [[ "$arg" =~ --([0-9]+)min ]]; then
+    X_MINUTES="${BASH_REMATCH[1]}"  # Extract the number of minutes from --Xmin
+  else
+    INPUT_FILE="$arg"  # Assuming the input file is the argument without --
+  fi
+done
+
+# Ensure input file is provided
+if [ -z "$INPUT_FILE" ]; then
+    echo "Usage: $0 [--Xmin] input_file"
+    exit 1
+fi
+
+# Set the output filename base
+OUTPUT_BASE="${INPUT_FILE%.*}"
+
+# Check if --Xmin is provided and is greater than 0
+if [ "$X_MINUTES" -gt 0 ]; then
+    # Convert minutes to seconds
+    SEGMENT_LENGTH=$((X_MINUTES * 60))
+
+    # Use FFmpeg to split the file into segments of the specified duration
+    # Output files will have the format: output_base-part-01.mp3, output_base-part-02.mp3, etc.
+    ffmpeg -i "$INPUT_FILE" -vn -ar 44100 -ac 2 -b:a 128k -f segment -segment_time "$SEGMENT_LENGTH" -reset_timestamps 1 "${OUTPUT_BASE}-part-%02d.mp3"
+else
+    # If no --Xmin is provided, just convert the file to a single MP3
+    ffmpeg -i "$INPUT_FILE" -vn -ar 44100 -ac 2 -b:a 128k "${OUTPUT_BASE}.mp3"
+fi
+
