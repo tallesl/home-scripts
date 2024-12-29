@@ -1,0 +1,1 @@
+gdb -tui "$1" -ex "b main" -ex "r ${@:2}"
