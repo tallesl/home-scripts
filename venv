@@ -20,7 +20,7 @@ function prompt_and_execute() {
 
 if [ -d venv ]; then
     if ! prompt_and_execute "$remove_venv"; then
-        return
+        exit
     fi
 fi
 
